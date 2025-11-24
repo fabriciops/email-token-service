@@ -1,0 +1,72 @@
+version: '3.8'
+
+services:
+  mongodb:
+    image: mongo:6.0
+    container_name: defensor_mongodb
+    restart: always
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ${MONGO_ROOT_USERNAME}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_ROOT_PASSWORD}
+      MONGO_INITDB_DATABASE: ${MONGO_DB_NAME}
+    ports:
+      - "27018:27017"  # Alterado de 27017 para 27018
+    volumes:
+      - mongodb_data:/data/db
+      - ./mongodb/init-mongo.js:/docker-entrypoint-initdb.d/init-mongo.js:ro
+    networks:
+      - defensor_network
+
+  rabbitmq:
+    image: rabbitmq:3.12-management
+    container_name: defensor_rabbitmq
+    restart: always
+    environment:
+      RABBITMQ_DEFAULT_USER: ${RABBITMQ_USER}
+      RABBITMQ_DEFAULT_PASS: ${RABBITMQ_PASS}
+    ports:
+      - "5673:5672"    # Alterado de 5672 para 5673
+      - "15673:15672"  # Alterado de 15672 para 15673
+    networks:
+      - defensor_network
+
+  api:
+    build: ./api
+    container_name: defensor_api
+    restart: always
+    ports:
+      - "8000:8000"
+    environment:
+      - MONGODB_URL=${MONGODB_URL}
+      - RABBITMQ_URL=${RABBITMQ_URL}
+      - SECRET_KEY=${SECRET_KEY}
+      - API_HASH_KEY=${API_HASH_KEY}
+    depends_on:
+      - mongodb
+      - rabbitmq
+    networks:
+      - defensor_network
+
+  email_service:
+    build: ./email_service
+    container_name: defensor_email_service
+    restart: always
+    environment:
+      - RABBITMQ_URL=${RABBITMQ_URL}
+      - SMTP_SERVER=${SMTP_SERVER}
+      - SMTP_PORT=${SMTP_PORT}
+      - SMTP_USERNAME=${SMTP_USERNAME}
+      - SMTP_PASSWORD=${SMTP_PASSWORD}
+      - FROM_EMAIL=${FROM_EMAIL}
+      - API_BASE_URL=${API_BASE_URL}
+    depends_on:
+      - rabbitmq
+    networks:
+      - defensor_network
+
+volumes:
+  mongodb_data:
+
+networks:
+  defensor_network:
+    driver: bridge
