@@ -2,7 +2,6 @@ from pymongo import MongoClient
 from app.config.settings import get_settings
 from app.models.user import User, UserInDB
 from app.models.token import Token, TokenInDB
-from bson import ObjectId
 from datetime import datetime
 import logging
 
@@ -41,8 +40,19 @@ class MongoDBService:
     
     def insert_token(self, token: Token) -> any:
         """Insere token no MongoDB"""
-        token_dict = token.dict()
-        return self.db.tokens.insert_one(token_dict)
+        try:
+            logger.info(f"Convertendo token para dict...")
+            token_dict = token.dict()
+            logger.info(f"Token convertido: {token_dict}")
+            
+            logger.info(f"Tentando inserir token no MongoDB...")
+            result = self.db.tokens.insert_one(token_dict)
+            logger.info(f"Token inserido com ID: {result.inserted_id}")
+            
+            return result
+        except Exception as e:
+            logger.error(f"Erro ao inserir token: {e}")
+            raise
     
     def find_token(self, token_str: str) -> TokenInDB:
         """Busca token por string"""

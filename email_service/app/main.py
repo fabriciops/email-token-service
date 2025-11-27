@@ -21,18 +21,19 @@ class EmailConsumer:
         try:
             logger.info(f"Processando email para: {email_data['to_email']}")
             
-            # Renderizar template
-            html_content = self.template_service.render_validation_email(
+            # Renderizar template (agora retorna HTML e Texto)
+            html_content, text_content = self.template_service.render_validation_email(
                 user_name=email_data["user_name"],
                 token=email_data["token"],
                 expires_minutes=email_data["expires_minutes"]
             )
             
-            # Enviar email
+            # Enviar email com ambas as versões
             self.email_sender.send_email(
                 to_email=email_data["to_email"],
                 subject="Validação de Identidade - Defensoria Pública",
-                html_content=html_content
+                html_content=html_content,
+                text_content=text_content
             )
             
             logger.info(f"✅ Email enviado com sucesso para: {email_data['to_email']}")

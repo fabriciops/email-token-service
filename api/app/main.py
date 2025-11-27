@@ -1,10 +1,13 @@
 from fastapi import FastAPI, Depends, HTTPException, Header
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.templating import Jinja2Templates
+from fastapi.staticfiles import StaticFiles
 from contextlib import asynccontextmanager
 from app.config.settings import get_settings
 from app.routers import users, tokens
 from app.utils.security import verify_api_hash
 import logging
+import os
 
 # Configurar logging
 logging.basicConfig(level=logging.INFO)
@@ -20,12 +23,19 @@ async def lifespan(app: FastAPI):
     # Shutdown
     logger.info("Encerrando DefensorTokenValidator API")
 
+# Crie a app PRIMEIRO
 app = FastAPI(
     title="DefensorTokenValidator API",
     description="Sistema de validação de identidade da Defensoria Pública",
     version="1.0.0",
     lifespan=lifespan
 )
+
+# Configure templates DEPOIS de criar a app
+templates = Jinja2Templates(directory="app/templates")
+
+# Configure arquivos estáticos DEPOIS de criar a app
+app.mount("/static", StaticFiles(directory="app/static"), name="static")
 
 # CORS
 app.add_middleware(
@@ -42,7 +52,7 @@ async def verify_api_key(x_api_hash: str = Header(...)):
         raise HTTPException(status_code=401, detail="API Hash inválido")
     return True
 
-# Incluir routers
+# Incluir routers DEPOIS de criar a app
 app.include_router(
     users.router, 
     prefix="/api/v1", 

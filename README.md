@@ -111,7 +111,7 @@ echo "RabbitMQ Management: http://$(curl -s http://169.254.169.254/latest/meta-d
 # Fazer uma nova requisição para testar
 curl -X POST http://localhost:8000/api/v1/receive-user-data \
   -H "Content-Type: application/json" \
-  -H "X-API-Hash: 36330e34a9a60156c5aa5a6723b03b62615860baf07f809614b914273a9a25fc" \
+  -H "X-API-Hash: XXXXXXXXXXXXXXX" \
   -d '{
     "nome": "Teste Final",
     "email": "teste-final@example.com", 

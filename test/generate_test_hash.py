@@ -9,8 +9,7 @@ def generate_api_hash(api_hash_key: str):
         hashlib.sha256
     )
     return hash_obj.hexdigest()
-
-# Substitua pela sua API_HASH_KEY do .env
+  
 API_HASH_KEY = "xgUvUNiKEmE1Zv_lz-kNdRy4041VN7ZMnI0U4hOPoyg"
 
 hash_correto = "xgUvUNiKEmE1Zv_lz-kNdRy4041VN7ZMnI0U4hOPoyg"

@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Validação Concluída</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #c7c7c7ff 0%, #89ffe2ff 100%);
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+        .container {
+            background: white;
+            padding: 40px;
+            border-radius: 10px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            text-align: center;
+            max-width: 500px;
+            width: 90%;
+        }
+        .success-icon {
+            margin-bottom: 20px;
+        }
+        .logo-image {
+            width: 150px;
+            height: auto;
+            max-width: 100%;
+        }
+        h1 {
+            color: #1F2937;
+            margin-bottom: 20px;
+        }
+        .email {
+            background: #F3F4F6;
+            padding: 10px;
+            border-radius: 5px;
+            margin: 20px 0;
+            font-weight: bold;
+            color: #374151;
+        }
+        .message {
+            color: #6B7280;
+            margin-bottom: 30px;
+            line-height: 1.6;
+        }
+        .button {
+            background: #10B981;
+            color: white;
+            padding: 12px 30px;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+        }
+        .button:hover {
+            background: #059669;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="success-icon">
+            <img src="/static/images/logo_defensoria_publica.png" alt="Defensoria Pública" class="logo-image">
+        </div>
+        <h1>Validação Concluída!</h1>
+        <div class="email">{{ user_email }}</div>
+        <p class="message">{{ message }}</p>
+        <p class="message">Você já pode voltar para a aplicação.</p>
+        <button class="button" onclick="window.close()">Fechar</button>
+    </div>
+</body>
+</html>

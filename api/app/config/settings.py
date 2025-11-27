@@ -21,6 +21,10 @@ class Settings(BaseSettings):
     # Security
     algorithm: str = "HS256"
     
+    # Typebot Webhook
+    typebot_webhook_url: str = ""
+    typebot_webhook_enabled: bool = False
+    
     class Config:
         env_file = ".env"
 
