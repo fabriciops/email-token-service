@@ -3,6 +3,7 @@ from app.schemas.user import UserCreateRequest, UserCreateResponse
 from app.services.mongo_service import MongoDBService
 from app.services.token_service import TokenService
 from app.services.email_service import EmailService
+from app.models.user import User
 from app.utils.security import verify_api_hash
 import logging
 
@@ -43,7 +44,7 @@ async def receive_user_data(
             token = token_service.create_token(
                 user_data.email, 
                 user_data.cpf,
-                x_session_id  # ← SALVAR SESSION ID
+                x_session_id
             )
             await email_service.send_validation_email(token, user_data.nome)
             
@@ -54,7 +55,6 @@ async def receive_user_data(
             )
         
         # Criar NOVO usuário
-        from app.models.user import User
         user = User(**user_data.dict())
         user_id = mongo_service.insert_user(user)
         
@@ -62,7 +62,7 @@ async def receive_user_data(
         token = token_service.create_token(
             user_data.email, 
             user_data.cpf,
-            x_session_id  # ← SALVAR SESSION ID
+            x_session_id
         )
         
         # Enviar email

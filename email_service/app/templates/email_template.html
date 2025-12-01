@@ -3,132 +3,51 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Validação de Email - Defensoria Pública</title>
+    <title>Código de Verificação - Defensoria Pública</title>
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            background: linear-gradient(135deg, #c7c7c7ff 0%, #89ffe2ff 100%);
-            margin: 0;
-            padding: 0;
-            line-height: 1.6;
-            color: #333;
-        }
-        .container {
-            max-width: 600px;
-            margin: 0 auto;
-            background: white;
-            border-radius: 10px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-            overflow: hidden;
-        }
-        .header {
-            background: white;
-            padding: 30px 20px;
-            text-align: center;
-            border-bottom: 1px solid #e5e7eb;
-        }
-        .logo-image {
-            width: 150px;
-            height: auto;
-            max-width: 100%;
-        }
-        .content {
-            padding: 40px;
-            text-align: center;
-        }
-        h1 {
-            color: #1F2937;
-            margin-bottom: 20px;
-            font-size: 24px;
-        }
-        .user-info {
-            background: #F3F4F6;
-            padding: 15px;
-            border-radius: 5px;
+        /* Mantenha todo seu CSS atual */
+        
+        .copy-container {
+            position: relative;
             margin: 20px 0;
-            font-weight: bold;
-            color: #374151;
         }
-        .message {
-            color: #6B7280;
-            margin-bottom: 30px;
-            line-height: 1.6;
-            text-align: left;
-        }
-        .token-container {
-            background: #1F2937;
-            color: white;
-            padding: 20px;
-            border-radius: 5px;
-            margin: 25px 0;
-            text-align: center;
-        }
-        .token {
-            font-size: 28px;
-            font-weight: bold;
-            letter-spacing: 3px;
-            margin: 10px 0;
-        }
-        .button {
+        
+        .copy-button {
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
             background: #10B981;
             color: white;
-            padding: 15px 40px;
             border: none;
-            border-radius: 5px;
-            font-size: 16px;
-            font-weight: bold;
+            border-radius: 4px;
+            padding: 8px 15px;
+            font-size: 12px;
             cursor: pointer;
-            text-decoration: none;
-            display: inline-block;
-            margin: 15px 0;
+            display: flex;
+            align-items: center;
+            gap: 5px;
         }
-        .button:hover {
+        
+        .copy-button:hover {
             background: #059669;
         }
-        .warning {
-            background: #FEF3C7;
-            border: 1px solid #F59E0B;
-            padding: 15px;
-            border-radius: 5px;
-            margin: 25px 0;
-            text-align: left;
-            color: #92400E;
+        
+        .copy-button.copied {
+            background: #059669;
         }
-        .warning strong {
-            color: #B45309;
+        
+        .token-with-copy {
+            position: relative;
+            padding-right: 100px;
         }
-        .footer {
-            background: #F9FAFB;
-            padding: 25px;
+        
+        .success-message {
+            display: none;
+            color: #10B981;
+            font-size: 14px;
+            margin-top: 10px;
             text-align: center;
-            border-top: 1px solid #E5E7EB;
-            color: #6B7280;
-            font-size: 12px;
-        }
-        .instructions {
-            background: #EFF6FF;
-            padding: 15px;
-            border-radius: 5px;
-            margin: 20px 0;
-            text-align: left;
-            color: #1E40AF;
-        }
-        @media (max-width: 600px) {
-            .container {
-                margin: 10px;
-                border-radius: 8px;
-            }
-            .content {
-                padding: 30px 20px;
-            }
-            .token {
-                font-size: 24px;
-                letter-spacing: 2px;
-            }
-            .button {
-                padding: 12px 30px;
-                font-size: 14px;
-            }
         }
     </style>
 </head>
@@ -139,54 +58,74 @@
         </div>
 
         <div class="content">
-            <h1>Validação de Identidade</h1>
+            <h1>Código de Verificação</h1>
             
             <div class="user-info">
                 Prezado(a) <strong>{{ user_name }}</strong>
             </div>
             
             <div class="message">
-                <p>Para continuar com seu atendimento na Defensoria Pública, precisamos validar sua identidade.</p>
-                <p>Clique no botão abaixo para validar seu email automaticamente:</p>
-            </div>
-            
-            <a href="{{ validation_url }}" class="button">
-                ✅ Validar Minha Identidade
-            </a>
-            
-            <div class="instructions">
-                <p><strong>Método alternativo:</strong> Se o botão não funcionar, utilize o código de verificação abaixo no sistema:</p>
+                <p>Para continuar com seu atendimento, utilize o código abaixo no chat da Defensoria Pública:</p>
             </div>
             
             <div class="token-container">
                 <div style="margin-bottom: 10px; font-size: 14px;">CÓDIGO DE VERIFICAÇÃO</div>
-                <div class="token">{{ token }}</div>
+                
+                <div class="copy-container">
+                    <div class="token token-with-copy">{{ token }}</div>
+                    <button class="copy-button" onclick="copyToClipboard('{{ token }}', this)">
+                        📋 Copiar
+                    </button>
+                </div>
+                
+                <div id="copy-success" class="success-message">
+                    ✅ Código copiado para a área de transferência!
+                </div>
+                
                 <div style="margin-top: 10px; font-size: 12px; opacity: 0.8;">
                     Válido por {{ expires_minutes }} minutos
                 </div>
             </div>
             
-            <div class="warning">
-                <strong>⚠️ Atenção:</strong> 
-                <ul style="margin: 10px 0; padding-left: 20px;">
-                    <li>Este código é de uso pessoal e intransferível</li>
-                    <li>Não compartilhe este código com ninguém</li>
-                    <li>A Defensoria Pública nunca solicita senhas por email</li>
-                </ul>
+            <div class="instructions">
+                <p><strong>Como usar:</strong></p>
+                <ol style="margin: 10px 0; padding-left: 20px;">
+                    <li><strong>Volte ao chat</strong> da Defensoria Pública</li>
+                    <li><strong>Cole ou digite</strong> o código acima</li>
+                    <li><strong>Aguarde a confirmação</strong> para continuar</li>
+                </ol>
+                <p><em>Dica: Clique no botão "📋 Copiar" para facilitar.</em></p>
             </div>
             
-            <div class="message">
-                <p>Se você não solicitou este atendimento, por favor ignore este email.</p>
-            </div>
-        </div>
-        
-        <div class="footer">
-            <p><strong>Este é um email automático. Por favor, não responda.</strong></p>
-            <p>Defensoria Pública - Sistema de Atendimento</p>
-            <p style="margin-top: 10px; font-size: 11px; opacity: 0.7;">
-                Para sua segurança, nunca compartilhe informações pessoais por email.
-            </p>
+            <!-- Mantenha o resto do seu template -->
+            
         </div>
     </div>
+
+    <script>
+        function copyToClipboard(text, button) {
+            navigator.clipboard.writeText(text).then(function() {
+                // Feedback visual
+                button.innerHTML = '✅ Copiado!';
+                button.classList.add('copied');
+                
+                const successMsg = document.getElementById('copy-success');
+                successMsg.style.display = 'block';
+                
+                // Volta ao normal após 3 segundos
+                setTimeout(function() {
+                    button.innerHTML = '📋 Copiar';
+                    button.classList.remove('copied');
+                    successMsg.style.display = 'none';
+                }, 3000);
+            }).catch(function(err) {
+                console.error('Erro ao copiar: ', err);
+                button.innerHTML = '❌ Erro';
+                setTimeout(function() {
+                    button.innerHTML = '📋 Copiar';
+                }, 2000);
+            });
+        }
+    </script>
 </body>
 </html>

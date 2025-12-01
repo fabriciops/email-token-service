@@ -1,4 +1,4 @@
-from fastapi import APIRouter, HTTPException, Request
+from fastapi import APIRouter, HTTPException, Request, Header
 from app.schemas.token import TokenValidationResponse
 from app.services.token_service import TokenService
 from app.config.settings import get_settings
@@ -6,6 +6,7 @@ import logging
 import httpx
 import asyncio
 from datetime import datetime
+from app.utils.security import verify_api_hash
 from fastapi.responses import HTMLResponse
 from fastapi.templating import Jinja2Templates
 
@@ -18,12 +19,20 @@ settings = get_settings()
 templates = Jinja2Templates(directory="app/templates")
 
 @router.get("/validate-token/{token}", response_class=HTMLResponse)
-async def validate_token(token: str, request: Request):
+async def validate_token(
+    token: str, 
+    request: Request,
+    x_api_hash: str = Header(...),
+    ):
     """
     Valida token recebido por email e retorna página HTML
     """
     try:
         logger.info(f"Validando token: {token}")
+        
+        if not verify_api_hash(x_api_hash):
+            raise HTTPException(status_code=401, detail="API Hash inválido")
+        
         valid, message = token_service.validate_token(token)
         logger.info(f"Resultado validação: {valid} - {message}")
         
@@ -94,7 +103,6 @@ async def notify_typebot_validation(token_data):
             logger.error("Email não encontrado no token_data para notificar Typebot")
             return
         
-        # Preparar payload para Typebot
         payload = {
             "event": "email_validated",
             "email": user_email,

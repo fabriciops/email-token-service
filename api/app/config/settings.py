@@ -22,8 +22,9 @@ class Settings(BaseSettings):
     algorithm: str = "HS256"
     
     # Typebot Webhook
-    typebot_webhook_url: str = ""
-    typebot_webhook_enabled: bool = False
+    typebot_webhook_url: str = "https://typebot.co/api/v1/typebots/cm0k49isv0023rgagretmr3l4/blocks/hvfpn0wakdwohfn1g2kuee14/web/executeTestWebhook"
+    typebot_webhook_enabled: bool = True
+    typebot_id: str = "cm0k49isv0023rgagretmr3l4"
     
     class Config:
         env_file = ".env"
