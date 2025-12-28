@@ -1,6 +1,6 @@
 # DefensorTokenValidator
 
-Sistema de validação de identidade via token por email para a Defensoria Pública.
+Sistema de validação de identidade via token por email.
 
 ## Configuração Rápida
 
